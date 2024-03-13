@@ -68,14 +68,12 @@ public class Kahvinkeitin implements Serializable {
 
     public void lisaaKahvipapuja(double kahvipapuja) {
         this.keittimessaKahvipapuja = this.keittimessaKahvipapuja+ kahvipapuja;
-        System.out.println("KEITTIMESSÄ NYT "+ this.keittimessaKahvipapuja);
     }
 
     /**
      * asettaa kahvinkeiton tilan tarkistamlla valitut kahvi- ja vesimäärät ja kahvin vahvuuden
      */
     public void setTila() {
-        System.out.println("Valitttu kahvi "+ this.valittuKahvimaara);
         if (this.valittuKahvimaara > 100) {
             this.tila = "Voit keittää korkeintaan 100 kupillista!";
             this.sopiva = false;
@@ -110,7 +108,7 @@ public class Kahvinkeitin implements Serializable {
     }
 
     /**
-     * paratetriton alustaja
+     * parametriton alustaja
      */
     public Kahvinkeitin() {
     }
@@ -126,6 +124,10 @@ public class Kahvinkeitin implements Serializable {
 
     }
 
+    /**
+     * testipääohjelma
+     * @param args
+     */
     public static void main(String[] args) {
 
     }
