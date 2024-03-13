@@ -68,13 +68,23 @@ public class Kahvinkeitin implements Serializable {
 
     public void lisaaKahvipapuja(double kahvipapuja) {
         this.keittimessaKahvipapuja = this.keittimessaKahvipapuja+ kahvipapuja;
+        System.out.println("KEITTIMESSÄ NYT "+ this.keittimessaKahvipapuja);
     }
 
     /**
-     * asettaa kahvinkeiton tilan tarkistamlla kahvin vahvuuden sekä tarkistamlla papujen määrän
+     * asettaa kahvinkeiton tilan tarkistamlla valitut kahvi- ja vesimäärät ja kahvin vahvuuden
      */
     public void setTila() {
-        if (laskeKahvinVahvuus() < 0.7) {
+        System.out.println("Valitttu kahvi "+ this.valittuKahvimaara);
+        if (this.valittuKahvimaara > 100) {
+            this.tila = "Voit keittää korkeintaan 100 kupillista!";
+            this.sopiva = false;
+        }
+        else if (this.valittuKahvimaara <= 0 || this.valittuVesimaara <= 0) {
+            this.tila ="Määrän pitää olla enemmän kuin 0";
+            this.sopiva = false;
+        }
+        else if (laskeKahvinVahvuus() < 0.7) {
             this.tila = "Kahvista on tulossa liian laihaa! \nLisää kahvin tai vähennä veden määrää";
             this.sopiva = false;
         } else if (laskeKahvinVahvuus() > 1.5) {
@@ -82,13 +92,13 @@ public class Kahvinkeitin implements Serializable {
             this.sopiva = false;
         } else if (valittuKahvimaara > this.keittimessaKahvipapuja) {
             this.tila="Kahvipavut eivät riitä.";
+            this.sopiva = false;
         } else {
             this.tila="Valmis!";
             this.sopiva = true;
             this.keittimessaKahvipapuja = this.keittimessaKahvipapuja - this.valittuKahvimaara;
         }
     }
-
 
 
     /**

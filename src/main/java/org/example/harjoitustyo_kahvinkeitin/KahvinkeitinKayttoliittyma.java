@@ -101,9 +101,6 @@ public class KahvinkeitinKayttoliittyma extends Application {
             System.out.println(e);
         }
 
-
-        BorderPane paneeliPainikkeille = new BorderPane();
-
         /*
         luodaan VBox painikkeille
          */
@@ -114,7 +111,7 @@ public class KahvinkeitinKayttoliittyma extends Application {
         /*
         alustetaan tekstit ja tekstikentät
          */
-        Text kahviaJaljella = new Text("Kahvia jäljellä ");
+        Text kahviaJaljella = new Text();
         Label label_vesi = new Label("Valitse veden määrä: ");
         TextField txt_vesimaara = new TextField();
         Label label_kahvi = new Label("Valitse kahvin määrä: ");
@@ -185,7 +182,6 @@ public class KahvinkeitinKayttoliittyma extends Application {
         paneeli.setRight(vboxPainikkeille);
         paneeli.setCenter(kuvaPaneeli);
 
-
        /*
        Luodaan höyryanimaatio
         */
@@ -193,34 +189,34 @@ public class KahvinkeitinKayttoliittyma extends Application {
         Pane animaatiopaneeli = new Pane();
 
         // eka höyrypilvi
-        Rectangle piste1 = new Rectangle(185,39,1.5,4);
+        Rectangle piste1 = new Rectangle(185,49,1.5,4);
         piste1.setFill(Color.DIMGREY);
-        Rectangle piste2 = new Rectangle(186,36,1.5,4);
+        Rectangle piste2 = new Rectangle(186,46,1.5,4);
         piste2.setFill(Color.DIMGREY);
-        Rectangle piste3 = new Rectangle(185,33,1.5,4);
+        Rectangle piste3 = new Rectangle(185,43,1.5,4);
         piste3.setFill(Color.DIMGREY);
-        Rectangle piste4 = new Rectangle(186,30, 1.5, 4);
+        Rectangle piste4 = new Rectangle(186,40, 1.5, 4);
         piste4.setFill(Color.DIMGREY);
 
 
         // toinen höyrypilvi
-        Rectangle piste5 = new Rectangle(195,52,1.5,4);
+        Rectangle piste5 = new Rectangle(195,62,1.5,4);
         piste5.setFill(Color.DIMGREY);
-        Rectangle piste6 = new Rectangle(194,49,1.5, 4);
+        Rectangle piste6 = new Rectangle(194,59,1.5, 4);
         piste6.setFill(Color.DIMGREY);
-        Rectangle piste7 = new Rectangle(195,46,1.5,4);
+        Rectangle piste7 = new Rectangle(195,56,1.5,4);
         piste7.setFill(Color.DIMGREY);
-        Rectangle piste8 = new Rectangle(194,43,1.5,4);
+        Rectangle piste8 = new Rectangle(194,53,1.5,4);
         piste8.setFill(Color.DIMGREY);
 
         // kolmas höyrypilvi
-        Rectangle piste9 = new Rectangle(178,46,1.5,4);
+        Rectangle piste9 = new Rectangle(178,56,1.5,4);
         piste9.setFill(Color.DIMGREY);
-        Rectangle piste10 = new Rectangle(177,43,1.5,4);
+        Rectangle piste10 = new Rectangle(177,53,1.5,4);
         piste10.setFill(Color.DIMGREY);
-        Rectangle piste11 = new Rectangle(178,40,1.5,4);
+        Rectangle piste11 = new Rectangle(178,50,1.5,4);
         piste11.setFill(Color.DIMGREY);
-        Rectangle piste12 = new Rectangle(177,37,1.5,4);
+        Rectangle piste12 = new Rectangle(177,47,1.5,4);
         piste12.setFill(Color.DIMGREY);
 
         /*
@@ -250,8 +246,10 @@ public class KahvinkeitinKayttoliittyma extends Application {
                 aikateksti.setVisible(false);
                 txt_kahvimaara.setText("");
                 txt_vesimaara.setText("");
+                btnKahvi.setDisable(false);
             } else {
                 aikateksti.setText(String.valueOf(aikanyt-1));
+
             }
         };
 
@@ -270,11 +268,13 @@ public class KahvinkeitinKayttoliittyma extends Application {
                 (FXCollections.observableArrayList(arrKoneet));
         listKeittimet.setPrefWidth(120);
         listKeittimet.setPrefHeight(250);
+        listKeittimet.requestFocus();
 
 
         // sallitaan vain yksi valinta, oletuksena ensimmäinen
         listKeittimet.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         listKeittimet.getSelectionModel().select(0);
+        kahviaJaljella.setText(listKeittimet.getSelectionModel().getSelectedItem()+": kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
 
         /*
         otetaan valitun kahvulaadun id ja haetaan sen avulla oikeat tiedot kahvin määrästä
@@ -282,7 +282,8 @@ public class KahvinkeitinKayttoliittyma extends Application {
         listKeittimet.getSelectionModel().selectedItemProperty().addListener(
                 ov -> {
                     id = listKeittimet.getSelectionModel().getSelectedIndex();
-                    kahviaJaljella.setText("kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
+                    System.out.println(listKeittimet.getSelectionModel().getSelectedItem());
+                    kahviaJaljella.setText(listKeittimet.getSelectionModel().getSelectedItem()+": kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
                 }
         );
         /*
@@ -294,38 +295,32 @@ public class KahvinkeitinKayttoliittyma extends Application {
         Tapahtumankäsittelijä: kahvin keittäminen
          */
         btnKahvi.setOnMouseClicked(e -> {
+
             Kahvinkeitin keitinNyt = keitin[id];
+
+            // tarkistetaan että on annettu numeroita
             try{
                 Double.parseDouble(txt_vesimaara.getText());
-                Double.parseDouble(txt_vesimaara.getText());
-
-            } catch (Exception exception) {
+                Double.parseDouble(txt_kahvimaara.getText());
+            } catch (NumberFormatException exception) {
+                System.out.println("exception "+exception);
                 teksti.setText("Ole hyvä ja anna numero");
                 teksti.setVisible(true);
 
             } finally {
-                if (Double.parseDouble(txt_vesimaara.getText()) < 1 || ( Double.parseDouble(txt_vesimaara.getText()) < 1)  ) teksti.setText("Määrän pitää olla enemmän kuin 0");
+                keitinNyt.valittuVesimaara = Double.parseDouble(txt_vesimaara.getText());
+                keitinNyt.valittuKahvimaara = Double.parseDouble(txt_kahvimaara.getText());
+                keitinNyt.setTila();
 
+                //jos yritetään keittää vähemmän kuin 1 kupillinen tai yli 100
+                if (Double.parseDouble(txt_vesimaara.getText()) < 1 || ( Double.parseDouble(txt_kahvimaara.getText()) < 1) ||  Double.parseDouble(txt_kahvimaara.getText()) > 100) {
+                    teksti.setText( keitinNyt.getTila());
+                    teksti.setFill(Color.RED);
+                    teksti.setVisible(true);
+                }
                 else {
-                    keitinNyt.valittuVesimaara = Double.parseDouble(txt_vesimaara.getText());
-                    keitinNyt.valittuKahvimaara = Double.parseDouble(txt_kahvimaara.getText());
-                    keitinNyt.setTila();
-                    // if (teksti.isVisible()) teksti.setVisible(false);
-                    if (keitinNyt.valittuKahvimaara >  keitinNyt.getKahvi()) {  // jos valittu kahvimääärä on enemmän kuin keittimessä on papuja
-                        System.out.println("keittimessä "+ keitinNyt.getKahvi());
-                        System.out.println("keittimen tila: "+keitinNyt.getTila());
-                        teksti.setText(keitinNyt.getTila());
-                        lisaaPavutBox.setVisible(true);
-                        btn_pavut.setOnMouseClicked(papuKasittelija -> {
-                            keitinNyt.lisaaKahvipapuja(Double.parseDouble(txt_pavut.getText()));
-                            lisaaPavutBox.setVisible(false);
-                            teksti.setText("Pavut lisätty!");
-                            teksti.setVisible(true);
-                            kahviaJaljella.setText("kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
-                        });
-                    } else if (keitinNyt.sopiva) {
+                    if (keitinNyt.sopiva) {
                         //jos kahvia on tarpeeksi ja vesi-kahvisuhde on sopiva
-                        System.out.println("sopivaa tulossa");
                         if (teksti.isVisible()) teksti.setVisible(false);
                         aikateksti.setText("5");
                         aikateksti.setVisible(true);
@@ -339,26 +334,30 @@ public class KahvinkeitinKayttoliittyma extends Application {
                         animaatio1.play();
                         animaatio2.setCycleCount(Integer.parseInt(aikateksti.getText())+1);
                         animaatio2.play();
-                        kahviaJaljella.setText("kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
-                    } else {     // muussa tapauksessa, eli jos kahvista on tulossa liian vahvaa/laihaa, näytetään infoteksti
+                        kahviaJaljella.setText(listKeittimet.getSelectionModel().getSelectedItem()+": kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
+                        btnKahvi.setDisable(true);
+                    } else if (keitinNyt.valittuKahvimaara >  keitinNyt.getKahvi()) {  // jos valittu kahvimääärä on enemmän kuin keittimessä on papuja
+                        System.out.println("ei riitä_keittimessä "+ keitinNyt.getKahvi());
+                        System.out.println("ei riitä_keittimen tila: "+keitinNyt.getTila());
+                        teksti.setText(keitinNyt.getTila());
+                        lisaaPavutBox.setVisible(true);
+                        btn_pavut.setOnMouseClicked(papuKasittelija -> {
+                            keitinNyt.lisaaKahvipapuja(Double.parseDouble(txt_pavut.getText()));
+                            lisaaPavutBox.setVisible(false);
+                            teksti.setText("Pavut lisätty!");
+                            teksti.setFill(Color.BLACK);
+                            teksti.setVisible(true);
+                            System.out.println("lisäämisen jälkeen "+keitinNyt.getKahvi());
+                            kahviaJaljella.setText(listKeittimet.getSelectionModel().getSelectedItem()+": kahvia jäljellä "+ Math.round(keitin[id].getKahvi()));
+                        });
+                    } else  {     // muussa tapauksessa, eli jos kahvista on tulossa liian vahvaa/laihaa, näytetään infoteksti
                         teksti.setText(keitinNyt.getTila());
                         teksti.setFill(Color.RED);
                         teksti.setVisible(true);
                     }
-
                 }
-
-
             }
-
         });
-
-
-        // bpanePainikkeet.setRight(vboxPainikkeille);
-
-        // bpanePainikkeet.setTop(vboxPainikkeille);
-
-
 
         /*
         Tapahtumankäsittelijä: kun ohjelma lopetetaan
@@ -380,8 +379,6 @@ public class KahvinkeitinKayttoliittyma extends Application {
                 stage.close();
             }
         });
-
-
 
         Scene scene = new Scene(paneeli, 560, 450);
         primaryStage.setTitle("Kahvinkeitin");
