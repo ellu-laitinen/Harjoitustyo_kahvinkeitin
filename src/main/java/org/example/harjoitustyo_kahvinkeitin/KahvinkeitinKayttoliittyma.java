@@ -36,118 +36,114 @@ public class KahvinkeitinKayttoliittyma extends Application {
     /**
    * kahvityypin id
     */
-     int id;
+    private  int id;
 
     /**
      luodaan pääpaneeli
      */
-      BorderPane paneeli = new BorderPane();
+    private BorderPane paneeli = new BorderPane();
 
     /**
      * Luodaan Kahvinkeitin-luokan olio
      */
 
-     Kahvinkeitin[] keitin = new Kahvinkeitin[3];
+    private  Kahvinkeitin[] keitin = new Kahvinkeitin[3];
 
     /**
      Luodaan paneeli painikkeille ja teksteille
      */
-     BorderPane bpanePainikkeet = new BorderPane();
+    private BorderPane bpanePainikkeet = new BorderPane();
 
     /**
      määritetään valittavien kahvilaatujen määrä
      */
-     int kahvilaatuja = arrKoneet.length;
+    private  int kahvilaatuja = arrKoneet.length;
 
     /**
      luodaan VBox painikkeille
      */
-     VBox vboxPainikkeille = new VBox();
+    private  VBox vboxPainikkeille = new VBox();
 
 
     /**
      alustetaan tekstit ja tekstikentät
      */
-     Text kahviaJaljella = new Text();
-     Label label_vesi = new Label("Valitse veden määrä: ");
-     TextField txt_vesimaara = new TextField();
-     Label label_kahvi = new Label("Valitse kahvin määrä: ");
-     TextField txt_kahvimaara = new TextField();
+    private Text kahviaJaljella = new Text();
 
+    private Label label_vesi = new Label("Valitse veden määrä: ");
     /**
-     luodaan VBox papumääärn lisäämiselle
+     * tekstikenttä johon kirjoitetaan veden määrä
      */
-     VBox lisaaPavutBox = new VBox();
+    private  TextField txt_vesimaara = new TextField();
 
-     Label label_lisaaPavut = new Label("Lisää papuja koneeseen: ");
-     TextField txt_pavut = new TextField();
+
+    private Label label_kahvi = new Label("Valitse kahvin määrä: ");
+    /**
+     * tekstikenttä johon kirjoitetaan kahvin määrä
+     */
+    private TextField txt_kahvimaara = new TextField();
+
+
+    private  VBox lisaaPavutBox = new VBox();
+
+    private Label label_lisaaPavut = new Label("Lisää papuja koneeseen: ");
+    /**
+     * tekstikenttä koneeseen lisättävien papujen määrälle
+     */
+    private  TextField txt_pavut = new TextField();
     /**
      * painike jolla lisätään koneeseen papuja
      */
-     Button btn_pavut = new Button("Lisää pavut");
+    private   Button btn_pavut = new Button("Lisää pavut");
 
 
     /**
      painike kahvin keittämiselle
      */
-      Button btnKahvi = new Button("Keitä kahvi");
+    private  Button btnKahvi = new Button("Keitä kahvi");
 
     /**
-     alustetaan infoteksti ja aikaa jäjlellä -teksti ja piilotetaan ne
+     alustetaan infoteksti
      */
-     Text teksti = new Text();
-     Text aikateksti = new Text();
+    private Text teksti = new Text();
+    private Text aikateksti = new Text();
 
     /**
      painike ohjelman sulkemista varten
      */
-     Button btnLopeta = new Button("Sulje");
+    private Button btnLopeta = new Button("Sulje");
 
     /**
-     Lisätään kuvat kahvinkeittimestä
+      kuva kahvinkeittimestä
      */
-     Image kone = new Image("kahvinkeitin.jpg");
-     ImageView imgView = new ImageView(kone);
+    private Image kone = new Image("kahvinkeitin.jpg");
+    private ImageView imgView = new ImageView(kone);
 
-     StackPane kuvaPaneeli = new StackPane();
-
-
-     Image koneKaynnissa = new Image("kahvinkeitin_pour.jpg");
-     ImageView imgView2 = new ImageView(koneKaynnissa);
+    private StackPane kuvaPaneeli = new StackPane();
 
     /**
-     Luodaan höyryanimaatio
+     * toinen kuva käynnissä olevasta keittimestä
      */
-
-     Pane animaatiopaneeli = new Pane();
-
-    // eka höyrypilvi
-    Rectangle piste1 = new Rectangle(185,49,1.5,4);
-    Rectangle piste2 = new Rectangle(186,46,1.5,4);
-    Rectangle piste3 = new Rectangle(185,43,1.5,4);
-    Rectangle piste4 = new Rectangle(186,40, 1.5, 4);
-
-    // toinen höyrypilvi
-    Rectangle piste5 = new Rectangle(195,62,1.5,4);
-    Rectangle piste6 = new Rectangle(194,59,1.5, 4);
-    Rectangle piste7 = new Rectangle(195,56,1.5,4);
-    Rectangle piste8 = new Rectangle(194,53,1.5,4);
-
-    // kolmas höyrypilvi
-    Rectangle piste9 = new Rectangle(178,56,1.5,4);
-    Rectangle piste10 = new Rectangle(177,53,1.5,4);
-    Rectangle piste11 = new Rectangle(178,50,1.5,4);
-    Rectangle piste12 = new Rectangle(177,47,1.5,4);
+    private Image koneKaynnissa = new Image("kahvinkeitin_pour.jpg");
+    private ImageView imgView2 = new ImageView(koneKaynnissa);
 
     /**
-     luodaan ListView kahvilaaduista
+     Luodaan höyryanimaatiolle paneeli
      */
-      ListView<String> listKeittimet = new ListView<>
+
+    private  Pane animaatiopaneeli = new Pane();
+
+
+    /**
+     lista kahvilaaduista
+     */
+    private ListView<String> listKeittimet = new ListView<>
             (FXCollections.observableArrayList(arrKoneet));
 
 
     /**
-     Luetaan kahvilaatujen tiedot tiedostosta
+     Luetaan kahvilaatujen tiedot tiedostosta "kahvikone.dat" tai alustetaan tiedot jos tiedostoa ei ole. Virheenhallinta jos lukeminen
+     tai kirjoittaminen epäonnistuu.
      */
     private void lueTiedosto() {
         try {
@@ -185,7 +181,8 @@ public class KahvinkeitinKayttoliittyma extends Application {
     }
 
     /**
-     * Tallennetaan kahvien uudet tiedot tiedostoon
+     * Tallennetaan kahvien uudet tiedot tiedostoon "kahvikone.dat". Virheenhallinta jos kirjoittaminen epäonnistuu.
+     * Lopulta suljetaan ohjelma.
      */
     private void tallennaTiedostoon() {
         try {
@@ -248,7 +245,25 @@ public class KahvinkeitinKayttoliittyma extends Application {
         paneeli.setRight(vboxPainikkeille);
         paneeli.setCenter(kuvaPaneeli);
 
-        // asetetaan höyrypilvianimaation väri
+        // höyrypilvigrafiikka
+
+        // eka höyrypilvi
+        Rectangle piste1 = new Rectangle(185,49,1.5,4);
+        Rectangle piste2 = new Rectangle(186,46,1.5,4);
+        Rectangle piste3 = new Rectangle(185,43,1.5,4);
+        Rectangle piste4 = new Rectangle(186,40, 1.5, 4);
+
+        // toinen höyrypilvi
+        Rectangle piste5 = new Rectangle(195,62,1.5,4);
+        Rectangle piste6 = new Rectangle(194,59,1.5, 4);
+        Rectangle piste7 = new Rectangle(195,56,1.5,4);
+        Rectangle piste8 = new Rectangle(194,53,1.5,4);
+
+        // kolmas höyrypilvi
+        Rectangle piste9 = new Rectangle(178,56,1.5,4);
+        Rectangle piste10 = new Rectangle(177,53,1.5,4);
+        Rectangle piste11 = new Rectangle(178,50,1.5,4);
+        Rectangle piste12 = new Rectangle(177,47,1.5,4);
         piste1.setFill(Color.DIMGREY);
         piste2.setFill(Color.DIMGREY);
         piste3.setFill(Color.DIMGREY);

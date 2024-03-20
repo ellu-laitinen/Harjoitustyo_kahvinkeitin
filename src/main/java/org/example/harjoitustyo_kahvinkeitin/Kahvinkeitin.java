@@ -53,6 +53,10 @@ public class Kahvinkeitin implements Serializable {
         return keittimessaKahvipapuja;
     }
 
+    public void setKeittimessaKahvipapuja(double keittimessaKahvipapuja) {
+        this.keittimessaKahvipapuja = keittimessaKahvipapuja;
+    }
+
     /**
      * laskee valmiin kahvijuoman vahvuuden annettujen vesi- ja kahvimäärien perusteella
      * @return double valittukahvimaara/valittuvesimaara
@@ -124,11 +128,4 @@ public class Kahvinkeitin implements Serializable {
 
     }
 
-    /**
-     * testipääohjelma
-     * @param args
-     */
-    public static void main(String[] args) {
-
-    }
 }
